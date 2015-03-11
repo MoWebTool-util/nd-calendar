@@ -29,6 +29,7 @@
     "main": "index.js",
     "dependencies": {
       "jquery": "1.11.1",
+      "handlebars-runtime": "1.3.0",
       "nd-widget":"1.0.0",
       "nd-date":"1.0.0",
       "nd-browser":"0.0.0",
