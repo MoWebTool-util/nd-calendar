@@ -1,0 +1,42 @@
+{
+  "name": "nd-calendar",
+  "version": "1.0.0",
+  "description": "日历组件",
+  "keywords": [],
+  "homepage": "https://github.com/ndfront/nd-calendar",
+  "author": {
+    "name": "lzhengms",
+    "email": "lzhengms@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndfront/nd-calendar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ndfront/nd-calendar/issues"
+  },
+  "licenses": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-exec": "^0.4.6",
+    "grunt-jsdoc": "^0.5.7",
+    "grunt-spm-server": "^0.2.7",
+    "load-grunt-tasks": "^0.6.0"
+  },
+  "spm": {
+    "main": "index.js",
+    "dependencies": {
+      "jquery": "1.11.1",
+      "nd-widget":"1.0.0",
+      "nd-date":"1.0.0",
+      "nd-browser":"0.0.0",
+      "nd-wheel":"0.0.0",
+      "nd-overlay":"1.0.0"
+    },
+    "devDependencies": {
+      "expect.js": "0.3.1"
+    }
+  }
+}
