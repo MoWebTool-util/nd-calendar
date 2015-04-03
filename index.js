@@ -5,7 +5,6 @@
 
 'use strict';
 
-
 var $ = require('jquery');
 var Overlay = require('nd-overlay');
 var DateUtil = require('nd-date');
@@ -408,5 +407,51 @@ var Calendar = Overlay.extend({
     }), typeof val === 'string' ? DateUtil.stringToDate(val) || '' : val);
   }
 });
+
+Calendar.pluginEntry = {
+  name: 'Calendar',
+  starter: function() {
+    var plugin = this,
+      host = plugin.host;
+
+    var _widgets = plugin.exports = {};
+
+    function addWidget(name, instance) {
+      _widgets[name] = instance;
+
+      plugin.trigger('export', instance);
+    }
+
+    plugin.execute = function() {
+      host.$('[type="date"],[type="time"],[type="datetime"],[type="datetime-local"]')
+      .each(function(i, field) {
+        var hasTime = (field.getAttribute('type').indexOf('time') !== -1);
+        field.type = 'text';
+        addWidget(field.name, new Calendar({
+          trigger: field,
+          time: {
+            hour: hasTime,
+            minute: hasTime,
+            second: hasTime
+          },
+          align:  {
+            baseElement: field,
+            baseXY: [0, '100%']
+          }
+        }).render());
+      });
+    };
+
+    host.after('render', plugin.execute);
+    // host.after('addField', plugin.execute);
+
+    plugin.getWidget = function(name) {
+      return _widgets[name];
+    };
+
+    // 通知就绪
+    this.ready();
+  }
+};
 
 module.exports = Calendar;
