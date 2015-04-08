@@ -14,6 +14,7 @@ var helper = {
 
 var YearPanel = Widget.extend({
   attrs: {
+    className: 'ui-calendar-year',
     date: new Date(),
     n: 10, // 每页显示的年数个数
     m: 3, // 每行默认显示的个数
@@ -70,6 +71,7 @@ var YearPanel = Widget.extend({
     return this;
   },
   show: function() {
+    var className = this.get('className');
     var year = this.get('date').getFullYear();
 
     var n = this.get('n');
@@ -96,7 +98,7 @@ var YearPanel = Widget.extend({
     var arr = [];
     var flag = 0;
     for (i = 0; i < row; i++) {
-      var temp = ['<tr class="widget-calendar-year-column">'];
+      var temp = ['<tr class="' + className + '-column">'];
       for (var j = flag, len = Math.min(flag + m, list.length); j < len; j++, flag++) {
         var item = list[flag];
         temp.push('<td ');
@@ -114,7 +116,7 @@ var YearPanel = Widget.extend({
       temp.push('</tr>');
       arr[i] = temp.join('');
     }
-    arr.unshift('<table class="widget-calendar-year" data-role="year-panel">');
+    arr.unshift('<table data-role="year-panel">');
     arr.push('</table>');
 
     this.element.html(arr.join('')).show();

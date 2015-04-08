@@ -18,6 +18,7 @@ var defaultFormat = 'yyyy-MM';
 var MonthPanel = Widget.extend({
 
   attrs: {
+    className: 'ui-calendar-month',
     date: new Date(),
     months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
     disabled: function( /*month*/ ) { // function, 返回false的则不可点击
@@ -64,6 +65,7 @@ var MonthPanel = Widget.extend({
   },
 
   show: function() {
+    var className = this.get('className');
     var date = this.get('date');
     var year = date.getFullYear();
     var month = date.getMonth();
@@ -72,7 +74,7 @@ var MonthPanel = Widget.extend({
     var flag = 0;
 
     for (var i = 0; i < 4; i++) {
-      var temp = ['<tr class="widget-calendar-month-column">'];
+      var temp = ['<tr class="' + className + '-column">'];
 
       for (var j = flag, len = flag + 3; j < len; j++, flag++) {
         temp.push('<td ');
@@ -94,7 +96,7 @@ var MonthPanel = Widget.extend({
       arr[i] = temp.join('');
     }
 
-    arr.unshift('<table class="widget-calendar-month" data-role="month-panel">');
+    arr.unshift('<table data-role="month-panel">');
     arr.push('</table>');
 
     this.element.html(arr.join('')).show();

@@ -26,6 +26,7 @@ var defaultFormat = 'yyyy-MM-dd';
 var DatePanel = Widget.extend({
 
   attrs: {
+    className: 'ui-calendar-date',
     date: new Date(),
     week: ['一', '二', '三', '四', '五', '六', '日'],
     weekStart: 1, // 一周的起始，默认星期天
@@ -74,6 +75,7 @@ var DatePanel = Widget.extend({
   },
 
   show: function() {
+    var className = this.get('className');
     var date = this.get('date');
     var week = this.get('week');
     var month = date.getMonth();
@@ -90,14 +92,14 @@ var DatePanel = Widget.extend({
       weekdayArray[i] = week[t];
     }
 
-    html.push('<tr class="widget-calendar-date-column">');
+    html.push('<tr class="' + className + '-column">');
 
     if (this.get('showWeek')) {
       html.push('<th></th>');
     }
 
     for (i = 0; i < 7; i++) {
-      html.push('<th class="widget-calendar-date widget-calendar-date-' + weekArr[i] + '">' + weekdayArray[i] + '</th>');
+      html.push('<th class="' + className + '-' + weekArr[i] + '">' + weekdayArray[i] + '</th>');
     }
 
     html.push('</tr>');
@@ -116,7 +118,7 @@ var DatePanel = Widget.extend({
     var weekCount = ((+endDay - startDay) / (3600 * 24 * 1000) + 1) / 7;
 
     for (i = 0; i < weekCount; i++) {
-      var temp = ['<tr class="widget-calendar-date-panel">'];
+      var temp = ['<tr class="' + className + '-panel">'];
 
       for (var j = 0; j < 7; j++) {
         var d = DateUtil.distance(startDay, i * 7 + j); // 日期对象
@@ -149,7 +151,7 @@ var DatePanel = Widget.extend({
     }
 
     arr.unshift(html.join(''));
-    arr.unshift('<table class="widget-calendar-date" data-role="date-panel">');
+    arr.unshift('<table data-role="date-panel">');
     arr.push('</table>');
 
     this.element.html(arr.join('')).show();

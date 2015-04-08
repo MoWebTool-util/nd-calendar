@@ -1,9 +1,4 @@
-<div class="widget-calendar-bar" data-role="bar">
-  {{#if bar.display.clear}}
-  <input class="btn" type="button" value="{{bar.text.clear}}" data-role="btn-clear"/>
-  {{/if}}
-
-  {{#if bar.display.ok}}
-  <input class="btn" type="button" value="{{bar.text.ok}}" data-role="btn-ok"/>
-  {{/if}}
+<div class="ui-calendar-bar" data-role="bar">
+  {{#if bar.display.clear}}<button class="ui-calendar-bar-clear" type="button" data-role="btn-clear">{{bar.text.clear}}</button>{{/if}}
+  {{#if bar.display.ok}}<button class="ui-calendar-bar-ok" type="button" data-role="btn-ok">{{bar.text.ok}}</button>{{/if}}
 </div>

@@ -7,7 +7,7 @@
 var $ = require('jquery');
 var Widget = require('nd-widget');
 var wheel = require('nd-wheel');
-var tpl = require('./../tpl/time.handlebars');
+var tpl = require('../tpl/time.handlebars');
 
 var helper = {
 
@@ -39,6 +39,7 @@ var helper = {
 var TimePanel = Widget.extend({
 
   attrs: {
+    className: 'ui-calendar-time',
     hour: new Date().getHours(),
     minute: new Date().getMinutes(),
     second: new Date().getSeconds(),
@@ -51,14 +52,14 @@ var TimePanel = Widget.extend({
 
   events: {
 
-    'click [data-action]': function(e) {
-      var node = $(e.target);
-      var isPrev = /prev/.test(node.attr('data-action'));
-      var input = node.parent().find('[data-input]');
-      var val = +$.trim(input.val()) || 0;
-      val = val + (isPrev ? -1 : 1);
-      helper.change.call(this, input, val);
-    },
+    // 'click [data-action]': function(e) {
+    //   var node = $(e.target);
+    //   var isPrev = /prev/.test(node.attr('data-action'));
+    //   var input = node.parent().find('[data-input]');
+    //   var val = +$.trim(input.val()) || 0;
+    //   val = val + (isPrev ? -1 : 1);
+    //   helper.change.call(this, input, val);
+    // },
 
     'blur [data-input]': function(e) {
       var input = $(e.target);
