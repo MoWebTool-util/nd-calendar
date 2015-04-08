@@ -32,7 +32,7 @@
       "nd-widget":"1.0.0",
       "nd-date":"1.0.0",
       "nd-browser":"0.0.0",
-      "nd-wheel":"0.0.0",
+      "nd-wheel":"1.0.0",
       "nd-overlay":"1.0.0"
     },
     "devDependencies": {

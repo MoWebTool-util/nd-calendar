@@ -8,10 +8,12 @@
 var $ = require('jquery');
 var Overlay = require('nd-overlay');
 var DateUtil = require('nd-date');
+
 var DatePanel = require('./src/date-panel');
 var MonthPanel = require('./src/month-panel');
 var YearPanel = require('./src/year-panel');
 var TimePanel = require('./src/time-panel');
+
 var tpl = {
   calendar: require('./tpl/calendar.handlebars'),
   bar: require('./tpl/bar.handlebars')
@@ -41,16 +43,16 @@ var helper = {
     };
     var d = this.get('date');
     var result;
-    if(params.date) {
+    if (params.date) {
       var str = params.date;
       var format = defaultFormat;
-      if(this.times) {
+      if (this.times) {
         str += ' ' + this.times.output();
         format += ' ' + 'HH:mm:ss';
       }
       result = DateUtil.stringToDate(str, format);
     } else {
-      if(this.times) {
+      if (this.times) {
         result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate(), fn(params.hour, this.times.get('hour')), fn(params.minute, this.times.get('minute')), fn(params.second, this.times.get('second')));
       } else {
         result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate());
@@ -62,7 +64,7 @@ var helper = {
   output: function() {
     var output = $(this.get('output'));
     var value = output.val() || output.text();
-    if(value) {
+    if (value) {
       return DateUtil.stringToDate(value, this.get('format'));
     }
   }
@@ -78,7 +80,7 @@ var Calendar = Overlay.extend({
       setter: function(val) {
         if (!val) {
           val = new Date();
-        } else if(typeof val === 'string') {
+        } else if (typeof val === 'string') {
           val = DateUtil.stringToDate(val, this.get('format')) || val;
         }
         return val;
@@ -125,13 +127,13 @@ var Calendar = Overlay.extend({
       text: defalutBar.text
     },
     disabled: { // date, month, year
-      date: function(date) {
+      date: function( /*date*/ ) {
         return false;
       },
-      month: function(date) {
+      month: function( /*date*/ ) {
         return false;
       },
-      year: function(date) {
+      year: function( /*date*/ ) {
         return false;
       }
     },
@@ -139,33 +141,33 @@ var Calendar = Overlay.extend({
     view: 'date' // year: 年选择器；month: 年月选择器；date: 正常的日期选择器
   },
   events: {
-    'click [data-role=current-month]': function(e) {
+    'click [data-role=current-month]': function( /*e*/ ) {
       this.renderContainer(this.get('mode') === 'months' ? this.get('view') + 's' : 'months');
     },
-    'click [data-role=current-year]': function(e) {
+    'click [data-role=current-year]': function( /*e*/ ) {
       this.renderContainer(this.get('mode') === 'years' ? this.get('view') + 's' : 'years');
     },
-    'click [data-role=prev-year]': function(e) {
+    'click [data-role=prev-year]': function( /*e*/ ) {
       this.years.prev();
       this.renderContainer(this.get('mode'));
     },
-    'click [data-role=next-year]': function(e) {
+    'click [data-role=next-year]': function( /*e*/ ) {
       this.years.next();
       this.renderContainer(this.get('mode'));
     },
-    'click [data-role=prev-month]': function(e) {
+    'click [data-role=prev-month]': function( /*e*/ ) {
       this.months.prev();
       this.renderContainer(this.get('mode'));
     },
-    'click [data-role=next-month]': function(e) {
+    'click [data-role=next-month]': function( /*e*/ ) {
       this.months.next();
       this.renderContainer(this.get('mode'));
     },
-    'click [data-role="btn-clear"]': function(e) {
+    'click [data-role="btn-clear"]': function( /*e*/ ) {
       this.output('');
       this.hide();
     },
-    'click [data-role="btn-ok"]': function(e) {
+    'click [data-role="btn-ok"]': function( /*e*/ ) {
       this.output();
       this.hide();
     }
@@ -180,9 +182,9 @@ var Calendar = Overlay.extend({
     var mode = view + 's';
 
     (function(time) { // 存在时间显示的情况下设置默认格式
-      if(time) {
-        if(this.get('format') === defaultFormat) {
-          if(time === true) {
+      if (time) {
+        if (this.get('format') === defaultFormat) {
+          if (time === true) {
             this.set('time', {
               hour: true,
               minute: true
@@ -204,14 +206,14 @@ var Calendar = Overlay.extend({
     }).call(this, this.get('time'));
 
     (function(bar) { // 底部按钮栏控制，开启底部按钮，则选择日期后隐藏日历功能关闭
-      if(bar === true) {
+      if (bar === true) {
         this.set('bar', defalutBar);
         bar = this.get('bar');
       }
-      if(bar.display === true) {
+      if (bar.display === true) {
         bar.display = defalutBar.display;
       }
-      if(bar.display) {
+      if (bar.display) {
         this.set('hideOnSelect', false);
         container.after(tpl.bar({
           bar: bar
@@ -220,14 +222,14 @@ var Calendar = Overlay.extend({
     }).call(this, bar);
 
     (function(view) { // 根据模式自动调整输出格式
-      if(this.get('format') === defaultFormat) {
-        if(view === 'month') {
+      if (this.get('format') === defaultFormat) {
+        if (view === 'month') {
           this.set('format', 'yyyy-MM');
-        } else if(view === 'year') {
+        } else if (view === 'year') {
           this.set('format', 'yyyy');
         }
       }
-      if(typeof this.get('date') === 'string') { // 由于date的setter先于setup，而那时format还未自动处理，这里需要额外处理
+      if (typeof this.get('date') === 'string') { // 由于date的setter先于setup，而那时format还未自动处理，这里需要额外处理
         this.set('date', DateUtil.stringToDate(this.get('date'), this.get('format')));
       }
     }).call(this, view);
@@ -248,6 +250,7 @@ var Calendar = Overlay.extend({
       },
       parentNode: container
     }).render();
+
     this.months = new MonthPanel({
       date: d,
       months: this.get('i18n').months,
@@ -256,6 +259,7 @@ var Calendar = Overlay.extend({
       },
       parentNode: container
     }).render();
+
     this.years = new YearPanel({
       date: d,
       prevPlaceholder: this.get('i18n').prevPlaceholder,
@@ -265,7 +269,8 @@ var Calendar = Overlay.extend({
       },
       parentNode: container
     }).render();
-    if(this.get('time')) {
+
+    if (this.get('time')) {
       this.times = new TimePanel({
         parentNode: container,
         display: this.get('time')
@@ -284,36 +289,39 @@ var Calendar = Overlay.extend({
         date: now
       });
       self.renderPannel();
-      if(node) {
+      if (node) {
         self.renderContainer(mode);
         self.get('hideOnSelect') && mode === 'dates' ? self.output() : self.trigger('selectDate', d);
       }
       return false;
     });
+
     this.months.on('select', function(now, prev, node) {
       var d = helper.setDate.call(self, {
         year: now.getFullYear(),
         month: now.getMonth()
       });
       self.renderPannel();
-      if(node && node.attr('data-role') === 'set-month') {
+      if (node && node.attr('data-role') === 'set-month') {
         self.renderContainer(mode);
         self.get('hideOnSelect') && mode === 'months' ? self.output() : self.trigger('selectMonth', d);
       }
     });
+
     this.years.on('select', function(now, prev, node) {
       var d = helper.setDate.call(self, {
         year: now.getFullYear()
       });
       self.renderPannel();
-      if(node && node.attr('data-role') === 'set-year') {
+      if (node && node.attr('data-role') === 'set-year') {
         self.renderContainer(mode);
         self.get('hideOnSelect') && mode === 'years' ? self.output() : self.trigger('selectYear', d);
       }
     });
   },
+
   show: function() {
-    if(!this.rendered) {
+    if (!this.rendered) {
       this.render();
     }
     var value = helper.output.call(this) || this.get('date');
@@ -325,6 +333,7 @@ var Calendar = Overlay.extend({
     this.trigger('show');
     return this;
   },
+
   renderPannel: function() {
     var monthPannel = this.element.find('[data-role=current-month]');
     var yearPannel = this.element.find('[data-role=current-year]');
@@ -335,6 +344,7 @@ var Calendar = Overlay.extend({
     monthPannel.text(this.months.get('months')[month]);
     yearPannel.text(year);
   },
+
   renderContainer: function(mode) {
     var bar = this.$('[data-role=bar]');
     var d = this.get('date');
@@ -350,17 +360,18 @@ var Calendar = Overlay.extend({
     this.months.set('date', d);
     this.years.set('date', d);
 
-    if(mode === 'dates') {
+    if (mode === 'dates') {
       this.dates.show();
       this.times && this.times.show();
       bar.show();
-    } else if(mode === 'months') {
+    } else if (mode === 'months') {
       this.months.show();
-    } else if(mode === 'years') {
+    } else if (mode === 'years') {
       this.years.show();
     }
     return this;
   },
+
   refresh: function() {
     this.renderPannel();
     this.renderContainer(this.get('mode'));
@@ -368,21 +379,21 @@ var Calendar = Overlay.extend({
   },
 
   enable: function() {
-    var trigger = $(this.get('trigger'));
-    if(trigger && trigger[0]) {
+    var trigger = this.get('trigger');
+    if (trigger) {
       var self = this;
       var event = this.get('triggerType') + '.calendar';
-      trigger.on(event, function(e) {
+      $(trigger).on(event, function(e) {
         self.show();
         e.preventDefault();
       });
-      this._blurHide(this.get('trigger'));
+      this._blurHide(trigger);
     }
   },
 
   disable: function() {
     var trigger = $(this.get('trigger'));
-    if(trigger && trigger[0]) {
+    if (trigger && trigger[0]) {
       var event = this.get('triggerType') + '.calendar';
       trigger.off(event);
     }
@@ -391,7 +402,7 @@ var Calendar = Overlay.extend({
   output: function(val, undef) {
     var output = this.get('output');
     var view = this.get('view');
-    if(!output.length) {
+    if (!output.length) {
       return;
     }
     var tagName = output[0].tagName.toLowerCase();
@@ -399,7 +410,7 @@ var Calendar = Overlay.extend({
 
     var result = val.getDate ? DateUtil.format(val, this.get('format')) : val;
     output[(tagName === 'input' || tagName === 'textarea') ? 'val' : 'text'](result);
-    if(this.get('hideOnSelect')) {
+    if (this.get('hideOnSelect')) {
       this.hide();
     }
     this.trigger('select' + view.replace(/[a-z]/, function(s) {
@@ -424,22 +435,22 @@ Calendar.pluginEntry = {
 
     plugin.execute = function() {
       host.$('[type="date"],[type="time"],[type="datetime"],[type="datetime-local"]')
-      .each(function(i, field) {
-        var hasTime = (field.getAttribute('type').indexOf('time') !== -1);
-        field.type = 'text';
-        addWidget(field.name, new Calendar({
-          trigger: field,
-          time: {
-            hour: hasTime,
-            minute: hasTime,
-            second: hasTime
-          },
-          align:  {
-            baseElement: field,
-            baseXY: [0, '100%']
-          }
-        }).render());
-      });
+        .each(function(i, field) {
+          var hasTime = (field.getAttribute('type').indexOf('time') !== -1);
+          field.type = 'text';
+          addWidget(field.name, new Calendar({
+            trigger: field,
+            time: hasTime ? {
+              hour: hasTime,
+              minute: hasTime,
+              second: hasTime
+            } : false,
+            align: {
+              baseElement: field,
+              baseXY: [0, '100%']
+            }
+          }).render());
+        });
     };
 
     host.after('render', plugin.execute);
