@@ -79,13 +79,13 @@ var TimePanel = Widget.extend({
     this.$('[data-input]').each(function(i, input) {
       input = $(input);
 
-      wheel(input, function(type, prevent) {
+      wheel(input[0], function(type, prevent) {
         prevent();
 
         if (type === 'up') {
-          helper.change.call(self, input, self.get(input.attr('data-input')) + 1);
+          helper.change.call(self, input, self.get(input.data('input')) + 1);
         } else if (type === 'down') {
-          helper.change.call(self, input, self.get(input.attr('data-input')) - 1);
+          helper.change.call(self, input, self.get(input.data('input')) - 1);
         }
 
         input.select();
