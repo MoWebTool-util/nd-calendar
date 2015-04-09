@@ -29,7 +29,7 @@ var MonthPanel = Widget.extend({
   events: {
 
     'click [data-role=set-month]': function(e) {
-      // bugfix: 阻止出发 overlay 的 blur
+      // bugfix: 阻止触发 overlay 的 blur
       e.stopPropagation();
 
       var node = $(e.target);

@@ -26,7 +26,7 @@ var YearPanel = Widget.extend({
   },
   events: {
     'click [data-role=set-year]': function(e) {
-      // bugfix: 阻止出发 overlay 的 blur
+      // bugfix: 阻止触发 overlay 的 blur
       e.stopPropagation();
 
       var node = $(e.target);
@@ -36,19 +36,28 @@ var YearPanel = Widget.extend({
       this.trigger('select', now, prev, node);
     },
     'click .year-disabled': function(e) {
+      // bugfix: 阻止触发 overlay 的 blur
+      e.stopPropagation();
+
       var node = $(e.target);
       var year = this.get('date');
       var val = helper.getDate(node.attr('data-val'));
       this.trigger('selectDisabled', val, year, node);
     },
-    'click [data-role=get-prev-page]': function( /*e*/ ) {
+    'click [data-role=get-prev-page]': function(e) {
+      // bugfix: 阻止触发 overlay 的 blur
+      e.stopPropagation();
+
       var prev = this.get('date');
       var now = helper.getDate(prev.getFullYear() - this.get('n'));
       this.set('date', now);
       this.show();
       this.trigger('select', now, prev);
     },
-    'click [data-role=get-next-page]': function( /*e*/ ) {
+    'click [data-role=get-next-page]': function(e) {
+      // bugfix: 阻止触发 overlay 的 blur
+      e.stopPropagation();
+
       var prev = this.get('date');
       var now = helper.getDate(prev.getFullYear() + this.get('n'));
       this.set('date', now);
