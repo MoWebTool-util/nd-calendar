@@ -413,6 +413,7 @@ var Calendar = Overlay.extend({
     if (this.get('hideOnSelect')) {
       this.hide();
     }
+    output.trigger('blur');
     this.trigger('select' + view.replace(/[a-z]/, function(s) {
       return s.toUpperCase();
     }), typeof val === 'string' ? DateUtil.stringToDate(val) || '' : val);
