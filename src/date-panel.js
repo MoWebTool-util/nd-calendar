@@ -5,18 +5,21 @@
  */
 
 'use strict';
+
 var $ = require('jquery');
-var DateUtil = require('nd-date');
+var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
 var helper = {
   getMonthDayCount: function(month, d) {
     var ds = 31;
-    if (month == 1) {
-      ds = DateUtil.isLeap(d.getFullYear()) ? 29 : 28;
-    } else if (month == 3 || month == 5 || month == 8 || month == 10) {
+
+    if (month === 1) {
+      ds = datetime(d).isLeap() ? 29 : 28;
+    } else if (month === 3 || month === 5 || month === 8 || month === 10) {
       ds = 30;
     }
+
     return ds;
   }
 };
@@ -44,15 +47,15 @@ var DatePanel = Widget.extend({
       e.stopPropagation();
 
       var node = $(e.target);
-      var prev = DateUtil.format(this.get('date'), this.get('format'));
+      var prev = datetime(this.get('date'), this.get('format')).format();
       var date = node.attr('data-val');
-      this.set('date', DateUtil.stringToDate(date, this.get('format')));
+      this.set('date', datetime(date, this.get('format')).toDate());
       this.trigger('select', date, prev, node);
     },
 
     'click .date-disabled': function(e) {
       var node = $(e.target);
-      var date = DateUtil.format(this.get('date'), this.get('format'));
+      var date = datetime(this.get('date'), this.get('format')).format();
       var val = node.attr('data-val');
       this.trigger('selectDisabled', val, date, node);
     }
@@ -60,7 +63,7 @@ var DatePanel = Widget.extend({
 
   prev: function() {
     var prev = this.get('date');
-    var date = DateUtil.distance(this.get('date'), -1);
+    var date = datetime(this.get('date')).add('d', -1).toDate();
     this.set('date', date);
     this.trigger('select', date, prev);
     return this;
@@ -68,7 +71,7 @@ var DatePanel = Widget.extend({
 
   next: function() {
     var prev = this.get('date');
-    var date = DateUtil.distance(this.get('date'), 1);
+    var date = datetime(this.get('date')).add('d', 1).toDate();
     this.set('date', date);
     this.trigger('select', date, prev);
     return this;
@@ -108,11 +111,11 @@ var DatePanel = Widget.extend({
     var firstDayWeek = firstDay.getDay();
     var index = $.inArray(firstDayWeek, weekArr);
     index = index === 0 ? 7 : index;
-    var startDay = DateUtil.distance(firstDay, -index + 1);
-    var lastDay = DateUtil.distance(firstDay, helper.getMonthDayCount(month, date) - 1);
+    var startDay = datetime(firstDay).add('d', -index + 1).toDate();
+    var lastDay = datetime(firstDay).add('d', helper.getMonthDayCount(month, date) - 1).toDate();
     var lastDayWeek = lastDay.getDay();
     index = $.inArray(lastDayWeek, weekArr);
-    var endDay = DateUtil.distance(lastDay, 7 - index);
+    var endDay = datetime(lastDay).add('d', 7 - index).toDate();
 
     var arr = [];
     var weekCount = ((+endDay - startDay) / (3600 * 24 * 1000) + 1) / 7;
@@ -121,14 +124,14 @@ var DatePanel = Widget.extend({
       var temp = ['<tr class="' + className + '-panel">'];
 
       for (var j = 0; j < 7; j++) {
-        var d = DateUtil.distance(startDay, i * 7 + j); // 日期对象
-        var m = d.getMonth(); // 月份
-        var s = DateUtil.format(d, this.get('format')); // 日期字符串
-        var n = d.getDate(); // 日期
+        var d = datetime(startDay).add('d', i * 7 + j); // 日期对象
+        var m = d.M() - 1; // 月份
+        var s = d.format(this.get('format')); // 日期字符串
+        var n = d.d(); // 日期
 
         temp.push('<td data-val="' + s + '" ');
 
-        if (this.get('disabled').call(this, d) === true) {
+        if (this.get('disabled').call(this, d.toDate()) === true) {
           temp.push('class="date-disabled ');
           temp.push(m === month ? 'curr-month' : m < month ? 'prev-month' : 'next-month');
         } else {

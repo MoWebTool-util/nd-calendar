@@ -7,7 +7,7 @@
 
 var $ = require('jquery');
 var Overlay = require('nd-overlay');
-var DateUtil = require('nd-date');
+var datetime = require('nd-datetime');
 
 var DatePanel = require('./src/date-panel');
 var MonthPanel = require('./src/month-panel');
@@ -48,9 +48,9 @@ var helper = {
       var format = defaultFormat;
       if (this.times) {
         str += ' ' + this.times.output();
-        format += ' ' + 'HH:mm:ss';
+        format += ' ' + 'hh:mm:ss';
       }
-      result = DateUtil.stringToDate(str, format);
+      result = datetime(str, format).toDate();
     } else {
       if (this.times) {
         result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate(), fn(params.hour, this.times.get('hour')), fn(params.minute, this.times.get('minute')), fn(params.second, this.times.get('second')));
@@ -65,7 +65,7 @@ var helper = {
     var output = $(this.get('output'));
     var value = output.val() || output.text();
     if (value) {
-      return DateUtil.stringToDate(value, this.get('format'));
+      return datetime(value, this.get('format')).toDate();
     }
   }
 };
@@ -81,7 +81,7 @@ var Calendar = Overlay.extend({
         if (!val) {
           val = new Date();
         } else if (typeof val === 'string') {
-          val = DateUtil.stringToDate(val, this.get('format')) || val;
+          val = datetime(val, this.get('format')).toDate() || val;
         }
         return val;
       }
@@ -189,13 +189,13 @@ var Calendar = Overlay.extend({
               hour: true,
               minute: true
             });
-            this.set('format', defaultFormat + ' ' + 'HH:mm');
+            this.set('format', defaultFormat + ' ' + 'hh:mm');
           } else {
             var arr = [];
             time.hour = time.hour !== false;
             time.minute = time.minute !== false;
             time.second = time.second === true;
-            time.hour && arr.push('HH');
+            time.hour && arr.push('hh');
             time.minute && arr.push('mm');
             time.second && arr.push('ss');
             this.set('format', defaultFormat + ' ' + arr.join(':'));
@@ -230,7 +230,7 @@ var Calendar = Overlay.extend({
         }
       }
       if (typeof this.get('date') === 'string') { // 由于date的setter先于setup，而那时format还未自动处理，这里需要额外处理
-        this.set('date', DateUtil.stringToDate(this.get('date'), this.get('format')));
+        this.set('date', datetime(this.get('date'), this.get('format')).toDate());
       }
     }).call(this, view);
 
@@ -408,7 +408,7 @@ var Calendar = Overlay.extend({
     var tagName = output[0].tagName.toLowerCase();
     val = (val === null || val === undef) ? this.get('date') : val;
 
-    var result = val.getDate ? DateUtil.format(val, this.get('format')) : val;
+    var result = val.getDate ? datetime(val, this.get('format')).format() : val;
     output[(tagName === 'input' || tagName === 'textarea') ? 'val' : 'text'](result);
     if (this.get('hideOnSelect')) {
       this.hide();
@@ -416,7 +416,7 @@ var Calendar = Overlay.extend({
     output.trigger('blur');
     this.trigger('select' + view.replace(/[a-z]/, function(s) {
       return s.toUpperCase();
-    }), typeof val === 'string' ? DateUtil.stringToDate(val) || '' : val);
+    }), typeof val === 'string' ? datetime(val).toDate() || '' : val);
   }
 });
 

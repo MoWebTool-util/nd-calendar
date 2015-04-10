@@ -5,7 +5,7 @@
  */
 'use strict';
 var $ = require('jquery');
-var DateUtil = require('nd-date');
+var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
 var helper = {
@@ -34,7 +34,7 @@ var MonthPanel = Widget.extend({
 
       var node = $(e.target);
       var prev = this.get('date');
-      var now = DateUtil.stringToDate(node.attr('data-val'), defaultFormat);
+      var now = datetime(node.attr('data-val'), defaultFormat).toDate();
       this.set('date', now);
       this.trigger('select', now, prev, node);
     },
@@ -42,7 +42,7 @@ var MonthPanel = Widget.extend({
     'click .month-disabled': function(e) {
       var node = $(e.target);
       var month = this.get('date');
-      var val = DateUtil.stringToDate(node.attr('data-val'), defaultFormat);
+      var val = datetime(node.attr('data-val'), defaultFormat).toDate();
       this.trigger('selectDisabled', val, month, node);
     }
 
