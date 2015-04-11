@@ -10,19 +10,17 @@ var $ = require('jquery');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
-var helper = {
-  getMonthDayCount: function(month, d) {
-    var ds = 31;
+function getMonthDayCount(month, d) {
+  var ds = 31;
 
-    if (month === 1) {
-      ds = datetime(d).isLeap() ? 29 : 28;
-    } else if (month === 3 || month === 5 || month === 8 || month === 10) {
-      ds = 30;
-    }
-
-    return ds;
+  if (month === 1) {
+    ds = datetime(d).isLeap() ? 29 : 28;
+  } else if (month === 3 || month === 5 || month === 8 || month === 10) {
+    ds = 30;
   }
-};
+
+  return ds;
+}
 
 var defaultFormat = 'yyyy-MM-dd';
 
@@ -111,14 +109,14 @@ var DatePanel = Widget.extend({
     var firstDayWeek = firstDay.getDay();
     var index = $.inArray(firstDayWeek, weekArr);
     index = index === 0 ? 7 : index;
-    var startDay = datetime(firstDay).add('d', -index + 1).toDate();
-    var lastDay = datetime(firstDay).add('d', helper.getMonthDayCount(month, date) - 1).toDate();
+    var startDay = datetime(firstDay.getTime()).add('d', -index + 1).toNumber();
+    var lastDay = datetime(firstDay.getTime()).add('d', getMonthDayCount(month, date) - 1).toDate();
     var lastDayWeek = lastDay.getDay();
     index = $.inArray(lastDayWeek, weekArr);
-    var endDay = datetime(lastDay).add('d', 7 - index).toDate();
+    var endDay = datetime(lastDay.getTime()).add('d', 7 - index).toDate();
 
     var arr = [];
-    var weekCount = ((+endDay - startDay) / (3600 * 24 * 1000) + 1) / 7;
+    var weekCount = ((endDay - startDay) / (3600 * 24 * 1000) + 1) / 7;
 
     for (i = 0; i < weekCount; i++) {
       var temp = ['<tr class="' + className + '-panel">'];

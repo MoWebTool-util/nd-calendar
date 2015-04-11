@@ -435,9 +435,9 @@ Calendar.pluginEntry = {
     }
 
     plugin.execute = function() {
-      host.$('[type="date"],[type="time"],[type="datetime"],[type="datetime-local"]')
+      host.$('[type="date"],[type="time"],[type="datetime"],[type="datetime-local"],[x-type="date"],[x-type="time"],[x-type="datetime"],[x-type="datetime-local"]')
         .each(function(i, field) {
-          var hasTime = (field.getAttribute('type').indexOf('time') !== -1);
+          var hasTime = (field.getAttribute('type').indexOf('time') !== -1 || field.getAttribute('x-type').indexOf('time') !== -1);
           field.type = 'text';
           addWidget(field.name, new Calendar({
             trigger: field,
