@@ -20,6 +20,7 @@ var tpl = {
 };
 
 var defaultFormat = 'yyyy-MM-dd';
+
 var defalutBar = {
   display: {
     clear: true,
@@ -31,51 +32,58 @@ var defalutBar = {
   }
 };
 
-var helper = {
-  /**
-   * 获取一个日期
-   * @param params
-   * @returns {*}
-   */
-  setDate: function(params) {
-    var fn = function(a, b, undef) {
-      return a === undef ? b : a;
-    };
-    var d = this.get('date');
-    var result;
-    if (params.date) {
-      var str = params.date;
-      var format = defaultFormat;
-      if (this.times) {
-        str += ' ' + this.times.output();
-        format += ' ' + 'hh:mm:ss';
-      }
-      result = datetime(str, format).toDate();
-    } else {
-      if (this.times) {
-        result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate(), fn(params.hour, this.times.get('hour')), fn(params.minute, this.times.get('minute')), fn(params.second, this.times.get('second')));
-      } else {
-        result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate());
-      }
+/**
+ * 获取一个日期
+ * @param params
+ * @returns {*}
+ */
+function getTheDate(params) {
+  /*jshint validthis:true*/
+  var fn = function(a, b, undef) {
+    return a === undef ? b : a;
+  };
+
+  var d = this.get('date');
+  var result;
+
+  if (params.date) {
+    var str = params.date;
+    var format = defaultFormat;
+
+    if (this.times) {
+      str += ' ' + this.times.output();
+      format += ' ' + 'hh:mm:ss';
     }
-    this.set('date', result);
-    return result;
-  },
-  output: function() {
-    var output = $(this.get('output'));
-    var value = output.val() || output.text();
-    if (value) {
-      return datetime(value, this.get('format')).toDate();
+
+    result = datetime(str, format).toDate();
+  } else {
+    if (this.times) {
+      result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate(), fn(params.hour, this.times.get('hour')), fn(params.minute, this.times.get('minute')), fn(params.second, this.times.get('second')));
+    } else {
+      result = new Date(fn(params.year, d.getFullYear()), fn(params.month, d.getMonth()), d.getDate());
     }
   }
-};
+
+  this.set('date', result);
+
+  return result;
+}
+
+function helpOutput() {
+  /*jshint validthis:true*/
+  var output = $(this.get('output'));
+  var value = output.val() || output.text();
+  if (value) {
+    return datetime(value, this.get('format')).toDate();
+  }
+}
 
 var Calendar = Overlay.extend({
   attrs: {
     date: {
       value: '',
       getter: function(val) {
-        return val || helper.output.call(this) || new Date();
+        return val || helpOutput.call(this) || new Date();
       },
       setter: function(val) {
         if (!val) {
@@ -276,7 +284,7 @@ var Calendar = Overlay.extend({
         display: this.get('time')
       }).render();
       this.times.on('change', function(hour, minute, second) {
-        helper.setDate.call(self, {
+        getTheDate.call(self, {
           hour: hour,
           minute: minute,
           second: second
@@ -285,7 +293,7 @@ var Calendar = Overlay.extend({
     }
 
     this.dates.on('select', function(now, prev, node) {
-      var d = helper.setDate.call(self, {
+      var d = getTheDate.call(self, {
         date: now
       });
       self.renderPannel();
@@ -297,7 +305,7 @@ var Calendar = Overlay.extend({
     });
 
     this.months.on('select', function(now, prev, node) {
-      var d = helper.setDate.call(self, {
+      var d = getTheDate.call(self, {
         year: now.getFullYear(),
         month: now.getMonth()
       });
@@ -309,7 +317,7 @@ var Calendar = Overlay.extend({
     });
 
     this.years.on('select', function(now, prev, node) {
-      var d = helper.setDate.call(self, {
+      var d = getTheDate.call(self, {
         year: now.getFullYear()
       });
       self.renderPannel();
@@ -324,7 +332,7 @@ var Calendar = Overlay.extend({
     if (!this.rendered) {
       this.render();
     }
-    var value = helper.output.call(this) || this.get('date');
+    var value = helpOutput.call(this) || this.get('date');
     this.set('date', value);
     this.renderPannel();
     this.renderContainer(this.get('mode'));

@@ -1,7 +1,7 @@
 /**
- * User: caolvchong@gmail.com
- * Date: 8/21/13
- * Time: 11:13 AM
+ * @module: nd-calendar
+ * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @todo use handlebars
  */
 
 'use strict';
@@ -9,6 +9,8 @@
 var $ = require('jquery');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
+
+var defaultFormat = 'yyyy-MM-dd';
 
 function getMonthDayCount(month, d) {
   var ds = 31;
@@ -22,9 +24,7 @@ function getMonthDayCount(month, d) {
   return ds;
 }
 
-var defaultFormat = 'yyyy-MM-dd';
-
-var DatePanel = Widget.extend({
+module.exports = Widget.extend({
 
   attrs: {
     className: 'ui-calendar-date',
@@ -161,5 +161,3 @@ var DatePanel = Widget.extend({
   }
 
 });
-
-module.exports = DatePanel;

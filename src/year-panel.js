@@ -1,18 +1,20 @@
 /**
- * User: caolvchong@gmail.com
- * Date: 8/20/13
- * Time: 5:44 PM
+ * @module: nd-calendar
+ * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @todo use handlebars
  */
+
 'use strict';
+
 var $ = require('jquery');
 var Widget = require('nd-widget');
-var helper = {
-  getDate: function(year) {
-    return new Date(+year, 0, 1);
-  }
-};
 
-var YearPanel = Widget.extend({
+function getYearsFirstDate(year) {
+  return new Date(+year, 0, 1);
+}
+
+module.exports = Widget.extend({
+
   attrs: {
     className: 'ui-calendar-year',
     date: new Date(),
@@ -24,6 +26,7 @@ var YearPanel = Widget.extend({
     prevPlaceholder: '. . .',
     nextPlaceholder: '. . .'
   },
+
   events: {
     'click [data-role=set-year]': function(e) {
       // bugfix: 阻止触发 overlay 的 blur
@@ -31,7 +34,7 @@ var YearPanel = Widget.extend({
 
       var node = $(e.target);
       var prev = this.get('date');
-      var now = helper.getDate(node.attr('data-val'));
+      var now = getYearsFirstDate(node.attr('data-val'));
       this.set('date', now);
       this.trigger('select', now, prev, node);
     },
@@ -41,7 +44,7 @@ var YearPanel = Widget.extend({
 
       var node = $(e.target);
       var year = this.get('date');
-      var val = helper.getDate(node.attr('data-val'));
+      var val = getYearsFirstDate(node.attr('data-val'));
       this.trigger('selectDisabled', val, year, node);
     },
     'click [data-role=get-prev-page]': function(e) {
@@ -49,7 +52,7 @@ var YearPanel = Widget.extend({
       e.stopPropagation();
 
       var prev = this.get('date');
-      var now = helper.getDate(prev.getFullYear() - this.get('n'));
+      var now = getYearsFirstDate(prev.getFullYear() - this.get('n'));
       this.set('date', now);
       this.show();
       this.trigger('select', now, prev);
@@ -59,26 +62,29 @@ var YearPanel = Widget.extend({
       e.stopPropagation();
 
       var prev = this.get('date');
-      var now = helper.getDate(prev.getFullYear() + this.get('n'));
+      var now = getYearsFirstDate(prev.getFullYear() + this.get('n'));
       this.set('date', now);
       this.show();
       this.trigger('select', now, prev);
     }
   },
+
   prev: function() {
     var prev = this.get('date');
-    var now = helper.getDate(prev.getFullYear() - 1);
+    var now = getYearsFirstDate(prev.getFullYear() - 1);
     this.set('date', now);
     this.trigger('select', now, prev);
     return this;
   },
+
   next: function() {
     var prev = this.get('date');
-    var now = helper.getDate(prev.getFullYear() + 1);
+    var now = getYearsFirstDate(prev.getFullYear() + 1);
     this.set('date', now);
     this.trigger('select', now, prev);
     return this;
   },
+
   show: function() {
     var className = this.get('className');
     var year = this.get('date').getFullYear();
@@ -88,17 +94,20 @@ var YearPanel = Widget.extend({
     var row = Math.ceil((n + 2) / m);
     var start = year - year % n;
     var list = [];
+
     for (var i = 0; i < n; i++) {
       list[i] = {
         role: 'set-year',
         value: start + i,
-        disabled: this.get('disabled').call(this, helper.getDate(start + i))
+        disabled: this.get('disabled').call(this, getYearsFirstDate(start + i))
       };
     }
+
     list.unshift({
       role: 'get-prev-page',
       value: this.get('prevPlaceholder')
     });
+
     list.push({
       role: 'get-next-page',
       value: this.get('nextPlaceholder')
@@ -106,6 +115,7 @@ var YearPanel = Widget.extend({
 
     var arr = [];
     var flag = 0;
+
     for (i = 0; i < row; i++) {
       var temp = ['<tr class="' + className + '-column">'];
       for (var j = flag, len = Math.min(flag + m, list.length); j < len; j++, flag++) {
@@ -132,5 +142,3 @@ var YearPanel = Widget.extend({
     return this;
   }
 });
-
-module.exports = YearPanel;

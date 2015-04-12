@@ -1,21 +1,22 @@
 /**
- * User: caolvchong@gmail.com
- * Date: 8/21/13
- * Time: 10:39 AM
+ * @module: nd-calendar
+ * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @todo use handlebars
  */
+
 'use strict';
+
 var $ = require('jquery');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
-var helper = {
-  patchZero: function(n) {
-    return n < 10 ? '0' + n : n;
-  }
-};
+function patchZero(n) {
+  return n < 10 ? '0' + n : n;
+}
 
 var defaultFormat = 'yyyy-MM';
-var MonthPanel = Widget.extend({
+
+module.exports = Widget.extend({
 
   attrs: {
     className: 'ui-calendar-month',
@@ -88,7 +89,7 @@ var MonthPanel = Widget.extend({
           }
         }
 
-        temp.push(' data-val="' + (year + '-' + helper.patchZero(flag + 1)) + '"');
+        temp.push(' data-val="' + (year + '-' + patchZero(flag + 1)) + '"');
         temp.push('>', list[flag], '</td>');
       }
 
@@ -104,5 +105,3 @@ var MonthPanel = Widget.extend({
     return this;
   }
 });
-
-module.exports = MonthPanel;

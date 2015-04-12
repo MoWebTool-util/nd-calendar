@@ -1,42 +1,42 @@
 /**
- * User: caolvchong@gmail.com
- * Date: 8/21/13
- * Time: 5:05 PM
+ * @module: nd-calendar
+ * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
  */
+
 'use strict';
+
 var $ = require('jquery');
 var Widget = require('nd-widget');
 var wheel = require('nd-wheel');
+
 var tpl = require('../tpl/time.handlebars');
 
-var helper = {
+function patchZero(n) {
+  return n < 10 ? '0' + n : n;
+}
 
-  patchZero: function(n) {
-    return n < 10 ? '0' + n : n;
-  },
+function changeValue(input, val) {
+  /*jshint validthis:true*/
+  var type = input.attr('data-input');
+  val = +val;
+  val = isNaN(val) ? (+$.trim(input.val()) || 0) : val;
 
-  change: function(input, val) {
-    var type = input.attr('data-input');
-    val = +val;
-    val = isNaN(val) ? (+$.trim(input.val()) || 0) : val;
-
-    if (type === 'hour') {
-      val = (val + 24) % 24;
-      this._change(val, this.get('minute'), this.get('second'));
+  if (type === 'hour') {
+    val = (val + 24) % 24;
+    this._change(val, this.get('minute'), this.get('second'));
+  } else {
+    val = (val + 60) % 60;
+    if (type === 'minute') {
+      this._change(this.get('hour'), val, this.get('second'));
     } else {
-      val = (val + 60) % 60;
-      if (type === 'minute') {
-        this._change(this.get('hour'), val, this.get('second'));
-      } else {
-        this._change(this.get('hour'), this.get('minute'), val);
-      }
+      this._change(this.get('hour'), this.get('minute'), val);
     }
-
-    input.val(helper.patchZero(val));
   }
-};
 
-var TimePanel = Widget.extend({
+  input.val(patchZero(val));
+}
+
+module.exports = Widget.extend({
 
   attrs: {
     className: 'ui-calendar-time',
@@ -58,12 +58,12 @@ var TimePanel = Widget.extend({
     //   var input = node.parent().find('[data-input]');
     //   var val = +$.trim(input.val()) || 0;
     //   val = val + (isPrev ? -1 : 1);
-    //   helper.change.call(this, input, val);
+    //   changeValue.call(this, input, val);
     // },
 
     'blur [data-input]': function(e) {
       var input = $(e.target);
-      helper.change.call(this, input);
+      changeValue.call(this, input);
     }
   },
 
@@ -71,9 +71,9 @@ var TimePanel = Widget.extend({
     var self = this;
 
     this.element.html(tpl({
-      hour: helper.patchZero(this.get('hour')),
-      minute: helper.patchZero(this.get('minute')),
-      second: helper.patchZero(this.get('second')),
+      hour: patchZero(this.get('hour')),
+      minute: patchZero(this.get('minute')),
+      second: patchZero(this.get('second')),
       display: this.get('display')
     })).show();
 
@@ -84,9 +84,9 @@ var TimePanel = Widget.extend({
         prevent();
 
         if (type === 'up') {
-          helper.change.call(self, input, self.get(input.data('input')) + 1);
+          changeValue.call(self, input, self.get(input.data('input')) + 1);
         } else if (type === 'down') {
-          helper.change.call(self, input, self.get(input.data('input')) - 1);
+          changeValue.call(self, input, self.get(input.data('input')) - 1);
         }
 
         input.select();
@@ -103,7 +103,7 @@ var TimePanel = Widget.extend({
   },
 
   output: function() {
-    return helper.patchZero(this.get('hour')) + ':' + helper.patchZero(this.get('minute')) + ':' + helper.patchZero(this.get('second'));
+    return patchZero(this.get('hour')) + ':' + patchZero(this.get('minute')) + ':' + patchZero(this.get('second'));
   },
 
   _change: function(hour, minute, second) {
@@ -133,5 +133,3 @@ var TimePanel = Widget.extend({
   }
 
 });
-
-module.exports = TimePanel;
