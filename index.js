@@ -94,6 +94,7 @@ var Calendar = Overlay.extend({
         return val;
       }
     },
+    zIndex: 999,
     trigger: null,
     triggerType: 'click',
     output: {
@@ -463,7 +464,9 @@ Calendar.pluginEntry = {
     };
 
     host.after('render', plugin.execute);
-    // host.after('addField', plugin.execute);
+
+    typeof host.addField === 'function' &&
+    host.after('addField', plugin.execute);
 
     host.before('destroy', function() {
       Object.keys(_widgets).forEach(function(key) {
