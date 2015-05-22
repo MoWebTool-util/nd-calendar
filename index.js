@@ -174,6 +174,7 @@ var Calendar = Overlay.extend({
     },
     'click [data-role="btn-clear"]': function( /*e*/ ) {
       this.output('');
+      this.set('date','');
       this.hide();
     },
     'click [data-role="btn-ok"]': function( /*e*/ ) {
