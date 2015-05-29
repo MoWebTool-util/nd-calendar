@@ -15,8 +15,8 @@ var YearPanel = require('./src/year-panel');
 var TimePanel = require('./src/time-panel');
 
 var tpl = {
-  calendar: require('./tpl/calendar.handlebars'),
-  bar: require('./tpl/bar.handlebars')
+  calendar: require('./src/calendar.handlebars'),
+  bar: require('./src/bar.handlebars')
 };
 
 var defaultFormat = 'yyyy-MM-dd';
@@ -174,7 +174,7 @@ var Calendar = Overlay.extend({
     },
     'click [data-role="btn-clear"]': function( /*e*/ ) {
       this.output('');
-      this.set('date','');
+      this.set('date', '');
       this.hide();
     },
     'click [data-role="btn-ok"]': function( /*e*/ ) {
@@ -449,7 +449,7 @@ Calendar.pluginEntry = {
         .each(function(i, field) {
           var hasTime = (field.getAttribute('type').indexOf('time') !== -1 || field.getAttribute('x-type').indexOf('time') !== -1);
           field.type = 'text';
-          addWidget(field.name, new Calendar({
+          addWidget(field.name, new Calendar($.extend(true, {
             trigger: field,
             time: hasTime ? {
               hour: hasTime,
@@ -460,14 +460,14 @@ Calendar.pluginEntry = {
               baseElement: field,
               baseXY: [0, '100%']
             }
-          }).render());
+          }, plugin.getOptions('config'))).render());
         });
     };
 
     host.after('render', plugin.execute);
 
     typeof host.addField === 'function' &&
-    host.after('addField', plugin.execute);
+      host.after('addField', plugin.execute);
 
     host.before('destroy', function() {
       Object.keys(_widgets).forEach(function(key) {

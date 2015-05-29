@@ -9,7 +9,7 @@ var $ = require('jquery');
 var Widget = require('nd-widget');
 var wheel = require('nd-wheel');
 
-var tpl = require('../tpl/time.handlebars');
+var tpl = require('./time.handlebars');
 
 function patchZero(n) {
   return n < 10 ? '0' + n : n;
