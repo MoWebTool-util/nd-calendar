@@ -25,7 +25,7 @@
       "nd-widget": "1.0.0",
       "nd-datetime": "1.0.0",
       "nd-wheel": "1.0.0",
-      "nd-overlay": "1.0.0"
+      "nd-tip": "1.0.0"
     },
     "devDependencies": {
       "expect.js": "0.3.1"

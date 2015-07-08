@@ -1,6 +1,6 @@
 /**
- * @module: nd-calendar
- * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @module Calendar
+ * @author lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
  * @todo use handlebars
  */
 
@@ -20,7 +20,7 @@ module.exports = Widget.extend({
     date: new Date(),
     n: 10, // 每页显示的年数个数
     m: 3, // 每行默认显示的个数
-    disabled: function( /*year*/ ) { // function, 返回false的则不可点击
+    isDisabled: function( /*year*/ ) { // function, 返回false的则不可点击
       return false;
     },
     prevPlaceholder: '. . .',
@@ -99,7 +99,7 @@ module.exports = Widget.extend({
       list[i] = {
         role: 'set-year',
         value: start + i,
-        disabled: this.get('disabled').call(this, getYearsFirstDate(start + i))
+        disabled: this.get('isDisabled').call(this, getYearsFirstDate(start + i))
       };
     }
 

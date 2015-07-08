@@ -1,6 +1,6 @@
 /**
- * @module: nd-calendar
- * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @module Calendar
+ * @author lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
  */
 
 'use strict';

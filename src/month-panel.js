@@ -1,6 +1,6 @@
 /**
- * @module: nd-calendar
- * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @module Calendar
+ * @author lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
  * @todo use handlebars
  */
 
@@ -22,7 +22,7 @@ module.exports = Widget.extend({
     className: 'ui-calendar-month',
     date: new Date(),
     months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-    disabled: function( /*month*/ ) { // function, 返回false的则不可点击
+    isDisabled: function( /*month*/ ) { // function, 返回false的则不可点击
       return false;
     }
   },
@@ -80,7 +80,7 @@ module.exports = Widget.extend({
       for (var j = flag, len = flag + 3; j < len; j++, flag++) {
         temp.push('<td ');
 
-        if (this.get('disabled').call(this, new Date(year, flag, 1)) === true) {
+        if (this.get('isDisabled').call(this, new Date(year, flag, 1)) === true) {
           temp.push('class="month-disabled"');
         } else {
           temp.push('data-role="set-month"');

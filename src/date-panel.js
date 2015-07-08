@@ -1,6 +1,6 @@
 /**
- * @module: nd-calendar
- * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @module Calendar
+ * @author lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
  * @todo use handlebars
  */
 
@@ -33,7 +33,7 @@ module.exports = Widget.extend({
     weekStart: 1, // 一周的起始，默认星期天
     showWeek: false, // 是否显示星期
     format: defaultFormat, // 默认返回格式
-    disabled: function( /*date*/ ) { // function, 返回false的则不可点击
+    isDisabled: function( /*date*/ ) { // function, 返回false的则不可点击
       return false;
     }
   },
@@ -129,7 +129,7 @@ module.exports = Widget.extend({
 
         temp.push('<td data-val="' + s + '" ');
 
-        if (this.get('disabled').call(this, d.toDate()) === true) {
+        if (this.get('isDisabled').call(this, d.toDate()) === true) {
           temp.push('class="date-disabled ');
           temp.push(m === month ? 'curr-month' : m < month ? 'prev-month' : 'next-month');
         } else {
