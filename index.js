@@ -1,12 +1,12 @@
 /**
- * @module: nd-calendar
- * @author: lzhengms <lzhengms@gmail.com> - 2015-03-11 13:21:43
+ * @module Calendar
+ * @author lzhengms <lzhengms@gmail.com>
  */
 
 'use strict';
 
 var $ = require('jquery');
-var Overlay = require('nd-overlay');
+var Tip = require('nd-tip');
 var datetime = require('nd-datetime');
 
 var DatePanel = require('./src/date-panel');
@@ -14,7 +14,7 @@ var MonthPanel = require('./src/month-panel');
 var YearPanel = require('./src/year-panel');
 var TimePanel = require('./src/time-panel');
 
-var tpl = {
+var partials = {
   calendar: require('./src/calendar.handlebars'),
   bar: require('./src/bar.handlebars')
 };
@@ -78,8 +78,9 @@ function helpOutput() {
   }
 }
 
-var Calendar = Overlay.extend({
+var Calendar = Tip.extend({
   attrs: {
+    className: 'ui-calendar',
     date: {
       value: '',
       getter: function(val) {
@@ -95,6 +96,10 @@ var Calendar = Overlay.extend({
       }
     },
     zIndex: 999,
+    distance: 0,
+    pointPos: 22,
+    arrowPosition: 11,
+    inViewport: true,
     trigger: null,
     triggerType: 'click',
     output: {
@@ -108,34 +113,15 @@ var Calendar = Overlay.extend({
     hideOnSelect: true,
     time: false, // 是否显示时间，true显示时分，细粒度控制则传入一个对象{hour: true, minute: true, second: false},
     format: defaultFormat, // 输出格式
-    template: tpl.calendar(),
-    align: {
-
-      /*getter: function(val) {
-       var trigger = $(this.get('trigger'));
-       var parentNode = $(this.get('parentNode'));
-       var baseElement;
-       var baseXY = [0, 0];
-       if(trigger && trigger[0]) {
-       baseElement = trigger;
-       baseXY = [0, trigger.height() + 10];
-       } else if(parentNode && parentNode[0]) {
-       baseElement = parentNode;
-       }
-       return {
-       selfXY: [0, 0],
-       baseElement: baseElement,
-       baseXY: baseXY
-       };
-       }*/
-
-    },
+    content: partials.calendar(),
+    // align: {
+    // },
     // 底部按钮栏，默认不显示。当time设置后会自动开启。bar开启后，hideOnSelect会自动转为false
     bar: {
       display: false, // {clear: true, ok: true} 表示：清除,确定按钮的显示与否
       text: defalutBar.text
     },
-    disabled: { // date, month, year
+    isDisabled: { // date, month, year
       date: function( /*date*/ ) {
         return false;
       },
@@ -149,6 +135,7 @@ var Calendar = Overlay.extend({
     i18n: {},
     view: 'date' // year: 年选择器；month: 年月选择器；date: 正常的日期选择器
   },
+
   events: {
     'click [data-role=current-month]': function( /*e*/ ) {
       this.renderContainer(this.get('mode') === 'months' ? this.get('view') + 's' : 'months');
@@ -182,10 +169,18 @@ var Calendar = Overlay.extend({
       this.hide();
     }
   },
+
   setup: function() {
     Calendar.superclass.setup.call(this);
-    var self = this;
-    var container = this.element.find('[data-role=container]');
+
+    this.after('render', function() {
+      this.init();
+    });
+  },
+
+  init: function() {
+    var that = this;
+    var container = this.$('[data-role="container"]');
     var d = this.get('date');
     var bar = this.get('bar');
     var view = this.get('view');
@@ -225,7 +220,7 @@ var Calendar = Overlay.extend({
       }
       if (bar.display) {
         this.set('hideOnSelect', false);
-        container.after(tpl.bar({
+        container.after(partials.bar({
           bar: bar
         }));
       }
@@ -244,10 +239,7 @@ var Calendar = Overlay.extend({
       }
     }).call(this, view);
 
-    this._setPosition();
-    this.enable();
-
-    var disabled = this.get('disabled');
+    var isDisabled = this.get('isDisabled');
 
     this.set('mode', mode);
 
@@ -255,8 +247,8 @@ var Calendar = Overlay.extend({
       date: d,
       week: this.get('i18n').week,
       weekStart: this.get('weekStart'),
-      disabled: function(date) {
-        return disabled.date.call(self, date) || disabled.month.call(self, date) || disabled.year.call(self, date);
+      isDisabled: function(date) {
+        return isDisabled.date.call(that, date) || isDisabled.month.call(that, date) || isDisabled.year.call(that, date);
       },
       parentNode: container
     }).render();
@@ -264,8 +256,8 @@ var Calendar = Overlay.extend({
     this.months = new MonthPanel({
       date: d,
       months: this.get('i18n').months,
-      disabled: function(date) {
-        return disabled.month.call(self, date) || disabled.year.call(self, date);
+      isDisabled: function(date) {
+        return isDisabled.month.call(that, date) || isDisabled.year.call(that, date);
       },
       parentNode: container
     }).render();
@@ -274,8 +266,8 @@ var Calendar = Overlay.extend({
       date: d,
       prevPlaceholder: this.get('i18n').prevPlaceholder,
       nextPlaceholder: this.get('i18n').nextPlaceholder,
-      disabled: function(date) {
-        return disabled.year.call(self, date);
+      isDisabled: function(date) {
+        return isDisabled.year.call(that, date);
       },
       parentNode: container
     }).render();
@@ -286,7 +278,7 @@ var Calendar = Overlay.extend({
         display: this.get('time')
       }).render();
       this.times.on('change', function(hour, minute, second) {
-        getTheDate.call(self, {
+        getTheDate.call(that, {
           hour: hour,
           minute: minute,
           second: second
@@ -295,37 +287,37 @@ var Calendar = Overlay.extend({
     }
 
     this.dates.on('select', function(now, prev, node) {
-      var d = getTheDate.call(self, {
+      var d = getTheDate.call(that, {
         date: now
       });
-      self.renderPannel();
+      that.renderPannel();
       if (node) {
-        self.renderContainer(mode);
-        self.get('hideOnSelect') && mode === 'dates' ? self.output() : self.trigger('selectDate', d);
+        that.renderContainer(mode);
+        that.get('hideOnSelect') && mode === 'dates' ? that.output() : that.trigger('selectDate', d);
       }
       return false;
     });
 
     this.months.on('select', function(now, prev, node) {
-      var d = getTheDate.call(self, {
+      var d = getTheDate.call(that, {
         year: now.getFullYear(),
         month: now.getMonth()
       });
-      self.renderPannel();
+      that.renderPannel();
       if (node && node.attr('data-role') === 'set-month') {
-        self.renderContainer(mode);
-        self.get('hideOnSelect') && mode === 'months' ? self.output() : self.trigger('selectMonth', d);
+        that.renderContainer(mode);
+        that.get('hideOnSelect') && mode === 'months' ? that.output() : that.trigger('selectMonth', d);
       }
     });
 
     this.years.on('select', function(now, prev, node) {
-      var d = getTheDate.call(self, {
+      var d = getTheDate.call(that, {
         year: now.getFullYear()
       });
-      self.renderPannel();
+      that.renderPannel();
       if (node && node.attr('data-role') === 'set-year') {
-        self.renderContainer(mode);
-        self.get('hideOnSelect') && mode === 'years' ? self.output() : self.trigger('selectYear', d);
+        that.renderContainer(mode);
+        that.get('hideOnSelect') && mode === 'years' ? that.output() : that.trigger('selectYear', d);
       }
     });
   },
@@ -379,6 +371,9 @@ var Calendar = Overlay.extend({
     } else if (mode === 'years') {
       this.years.show();
     }
+
+    this._setPosition();
+
     return this;
   },
 
@@ -386,27 +381,6 @@ var Calendar = Overlay.extend({
     this.renderPannel();
     this.renderContainer(this.get('mode'));
     return this;
-  },
-
-  enable: function() {
-    var trigger = this.get('trigger');
-    if (trigger) {
-      var self = this;
-      var event = this.get('triggerType') + '.calendar';
-      $(trigger).on(event, function(e) {
-        self.show();
-        e.preventDefault();
-      });
-      this._blurHide(trigger);
-    }
-  },
-
-  disable: function() {
-    var trigger = $(this.get('trigger'));
-    if (trigger && trigger[0]) {
-      var event = this.get('triggerType') + '.calendar';
-      trigger.off(event);
-    }
   },
 
   output: function(val, undef) {
@@ -420,9 +394,11 @@ var Calendar = Overlay.extend({
 
     var result = val.getDate ? datetime(val, this.get('format')).format() : val;
     output[(tagName === 'input' || tagName === 'textarea') ? 'val' : 'text'](result);
+
     if (this.get('hideOnSelect')) {
       this.hide();
     }
+
     output.trigger('blur');
     this.trigger('select' + view.replace(/[a-z]/, function(s) {
       return s.toUpperCase();
@@ -455,11 +431,7 @@ Calendar.pluginEntry = {
               hour: hasTime,
               minute: hasTime,
               second: hasTime
-            } : false,
-            align: {
-              baseElement: field,
-              baseXY: [0, '100%']
-            }
+            } : false
           }, plugin.getOptions('config'))).render());
         });
     };
