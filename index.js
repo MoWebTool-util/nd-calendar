@@ -343,8 +343,14 @@ var Calendar = Tip.extend({
     var date = this.get('date');
     var month = date.getMonth();
     var year = date.getFullYear();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
     monthPannel.text(this.months.get('months')[month]);
     yearPannel.text(year);
+    this.times.set('hour', hour);
+    this.times.set('minute', minute);
+    this.times.set('second', second);
   },
 
   renderContainer: function(mode) {
