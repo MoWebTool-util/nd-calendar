@@ -337,20 +337,18 @@ var Calendar = Tip.extend({
   },
 
   renderPannel: function() {
-    var monthPannel = this.element.find('[data-role=current-month]');
-    var yearPannel = this.element.find('[data-role=current-year]');
-
     var date = this.get('date');
-    var month = date.getMonth();
-    var year = date.getFullYear();
-    var hour = date.getHours();
-    var minute = date.getMinutes();
-    var second = date.getSeconds();
-    monthPannel.text(this.months.get('months')[month]);
-    yearPannel.text(year);
-    this.times.set('hour', hour);
-    this.times.set('minute', minute);
-    this.times.set('second', second);
+
+    this.$('[data-role="current-month"]')
+      .text(this.months.get('months')[date.getMonth()]);
+
+    this.$('[data-role="current-year"]').text(date.getFullYear());
+
+    if (this.times) {
+      this.times.set('hour', date.getHours());
+      this.times.set('minute', date.getMinutes());
+      this.times.set('second', date.getSeconds());
+    }
   },
 
   renderContainer: function(mode) {
