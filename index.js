@@ -105,8 +105,7 @@ var Calendar = Tip.extend({
     output: {
       value: '',
       getter: function(val) {
-        val = val ? val : this.get('trigger');
-        return $(val);
+        return $(val || this.get('trigger'));
       }
     },
     mode: 'dates',
@@ -425,10 +424,12 @@ Calendar.pluginEntry = {
     }
 
     plugin.execute = function() {
-      host.$('[type="date"],[type="time"],[type="datetime"],[type="datetime-local"],[x-type="date"],[x-type="time"],[x-type="datetime"],[x-type="datetime-local"]')
+      host.$('[type="date"],[type="time"],[type="datetime"],[x-type="date"],[x-type="time"],[x-type="datetime"]')
+        .filter(':not([data-rendered])')
         .each(function(i, field) {
           var hasTime = (field.getAttribute('type').indexOf('time') !== -1 || field.getAttribute('x-type').indexOf('time') !== -1);
           field.type = 'text';
+          field.setAttribute('data-rendered', 'true');
           addWidget(field.name, new Calendar($.extend(true, {
             trigger: field,
             time: hasTime ? {
