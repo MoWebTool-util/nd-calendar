@@ -388,22 +388,26 @@ var Calendar = Tip.extend({
 
   output: function(val, undef) {
     var output = this.get('output');
-    var view = this.get('view');
+
     if (!output.length) {
       return;
     }
-    var tagName = output[0].tagName.toLowerCase();
+
     val = (val === null || val === undef) ? this.get('date') : val;
 
-    var result = val.getDate ? datetime(val, this.get('format')).format() : val;
-    output[(tagName === 'input' || tagName === 'textarea') ? 'val' : 'text'](result);
+    if (this.dates.get('isDisabled').call(this, val)) {
+      return;
+    }
+
+    output.val(val.getDate ? datetime(val, this.get('format')).format() : val);
 
     if (this.get('hideOnSelect')) {
       this.hide();
     }
 
     output.trigger('blur');
-    this.trigger('select' + view.replace(/[a-z]/, function(s) {
+
+    this.trigger('select' + this.get('view').replace(/[a-z]/, function(s) {
       return s.toUpperCase();
     }), typeof val === 'string' ? datetime(val).toDate() || '' : val);
   }
