@@ -395,7 +395,7 @@ var Calendar = Tip.extend({
 
     val = (val === null || val === undef) ? this.get('date') : val;
 
-    if (this.dates.get('isDisabled').call(this, val)) {
+    if (val && this.dates.get('isDisabled').call(this, val)) {
       return;
     }
 
