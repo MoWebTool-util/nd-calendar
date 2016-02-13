@@ -6,6 +6,7 @@
 'use strict';
 
 var $ = require('jquery');
+var __ = require('nd-i18n');
 var Tip = require('nd-tip');
 var datetime = require('nd-datetime');
 
@@ -27,8 +28,8 @@ var defalutBar = {
     ok: true
   },
   text: {
-    clear: '清除',
-    ok: '确定'
+    clear: __('清除'),
+    ok: __('确定')
   }
 };
 

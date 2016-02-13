@@ -7,6 +7,7 @@
 'use strict';
 
 var $ = require('jquery');
+var __ = require('nd-i18n');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
@@ -29,7 +30,7 @@ module.exports = Widget.extend({
   attrs: {
     className: 'ui-calendar-date',
     date: new Date(),
-    week: ['一', '二', '三', '四', '五', '六', '日'],
+    week: [__('一'), __('二'), __('三'), __('四'), __('五'), __('六'), __('日')],
     weekStart: 1, // 一周的起始，默认星期天
     showWeek: false, // 是否显示星期
     format: defaultFormat, // 默认返回格式

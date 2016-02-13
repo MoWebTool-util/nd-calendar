@@ -7,6 +7,7 @@
 'use strict';
 
 var $ = require('jquery');
+var __ = require('nd-i18n');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
 
@@ -21,7 +22,7 @@ module.exports = Widget.extend({
   attrs: {
     className: 'ui-calendar-month',
     date: new Date(),
-    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    months: [__('一月'), __('二月'), __('三月'), __('四月'), __('五月'), __('六月'), __('七月'), __('八月'), __('九月'), __('十月'), __('十一月'), __('十二月')],
     isDisabled: function( /*month*/ ) { // function, 返回false的则不可点击
       return false;
     }
