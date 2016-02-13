@@ -1,13 +1,15 @@
 # nd-calendar
 
-[![spm version](http://spm.crossjs.com/badge/nd-calendar)](http://spm.crossjs.com/package/nd-calendar)
+[![Travis](https://img.shields.io/travis/ndfront/nd-calendar.svg?style=flat-square)](https://github.com/ndfront/nd-calendar)
+[![Coveralls](https://img.shields.io/coveralls/ndfront/nd-calendar.svg?style=flat-square)](https://github.com/ndfront/nd-calendar)
+[![NPM version](https://img.shields.io/npm/v/nd-calendar.svg?style=flat-square)](https://npmjs.org/package/nd-calendar)
 
 > 日历组件
 
 ## 安装
 
 ```bash
-$ spm install nd-calendar --save
+$ npm install nd-calendar --save
 ```
 
 ## 使用
