@@ -6,7 +6,7 @@
 
 'use strict';
 
-var $ = require('jquery');
+var $ = require('nd-jquery');
 var __ = require('nd-i18n');
 var datetime = require('nd-datetime');
 var Widget = require('nd-widget');
