@@ -15,7 +15,7 @@ function patchZero(n) {
   return n < 10 ? '0' + n : n;
 }
 
-var defaultFormat = 'yyyy-MM';
+var defaultFormat = 'yyyy-MM-dd';
 
 module.exports = Widget.extend({
 
@@ -90,7 +90,7 @@ module.exports = Widget.extend({
           }
         }
 
-        temp.push(' data-val="' + (year + '-' + patchZero(flag + 1)) + '"');
+        temp.push(' data-val="' + (year + '-' + patchZero(flag + 1)) + '-01"');
         temp.push('>', list[flag], '</td>');
       }
 
